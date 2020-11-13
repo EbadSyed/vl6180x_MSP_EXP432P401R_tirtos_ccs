@@ -1,6 +1,6 @@
-## Example Summary
+## VL6180X SUMMARY
 
-Sample application that reads the temperature from a TMP sensor.
+A Basic project that reads range measurement from VL6180X
 
 ## Peripherals & Pin Assignments
 
@@ -9,17 +9,10 @@ and __ti_drivers_config.h__ files. Information on pins and resources used
 is present in both generated files. The SysConfig user interface can also be
 utilized to determine pins and resources used.
 
-* `CONFIG_GPIO_LED_0` - Indicator LED
-* `CONFIG_I2C_TMP` - I2C bus used to communicate with the TMP sensor.
-* `CONFIG_GPIO_TMP116_EN` - TMP116 power pin
+* `CONFIG_I2C_TMP` - I2C bus used to communicate with the VL6180x sensor.
 
 ## BoosterPacks, Board Resources & Jumper Settings
 
-This example requires a
-[__BOOSTXL-BASSENSORS BoosterPack__][boostxl-bassensors].
-
-For board specific jumper settings, resources and BoosterPack modifications,
-refer to the __Board.html__ file.
 
 > If you're using an IDE such as Code Composer Studio (CCS) or IAR, please
 refer to Board.html in your project directory for resources used and
@@ -48,48 +41,8 @@ The connection will have the following settings:
     Flow Control:    None
 ```
 
-* Run the example. `CONFIG_GPIO_LED_0` turns ON to indicate driver
-initialization is complete.
+* The example will request range measurements from VL6180X in One Shot Mode. Measurements will only be printed if there is no error and its within the measurable range.
 
-* The example will request temperature samples from an available TMP and display
-them via the UART. A total of 20 temperature samples are read and printed before
-the example exits. Terminal output should resemble:
-```
-    I2C Initialized!
-    Sample 0: 24 (C)
-    Sample 1: 24 (C)
-           .
-           .
-           .
-    Sample 18: 24 (C)
-    Sample 19: 24 (C)
-    I2C closed!
-```
-
-*  If the I2C communication fails, the following error message is displayed:
-```
-    I2C Bus fault.
-```
-
-## Application Design Details
-
-This application uses one task:
-
-`'getTempTask'` - performs the following actions:
-
-1. Opens and initializes an I2C driver object.
-
-2. Determines which TMP sensor is available. Attempts to find a TMP116 first,
-   and then a TMP006.
-
-3. Uses the I2C driver to get data from the TMP sensor.
-
-4. Extracts the temperature (in Celsius) and prints the value via the UART.
-
-5. The task sleeps for 1 second.
-
-6. After 20 temperature samples are recovered, the I2C peripheral is closed
-and the example exits.
 
 TI-RTOS:
 
@@ -108,11 +61,5 @@ FreeRTOS:
 * Please view the `FreeRTOSConfig.h` header file for example configuration
 information.
 
-SimpleLink Sensor and Actuator Plugin:
+* It interfaces via the I2C Driver..
 
-* This example uses a TMP sensor. It interfaces via the I2C Driver. For a
-richer API set for the TMP sensors, please refer the SimpleLink Sensor and
-Actuator Plugin. This plugin also offers a Button module to handle
-debounce also.
-
-[boostxl-bassensors]: http://www.ti.com/tool/BOOSTXL-BASSENSORS
