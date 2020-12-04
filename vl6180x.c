@@ -42,7 +42,6 @@
 #include <ti/drivers/I2C.h>
 #include <ti/display/Display.h>
 
-
 /* Driver configuration */
 #include "ti_drivers_config.h"
 
@@ -186,7 +185,9 @@
 
 static Display_Handle display;
 
-I2C_Handle      i2c;
+I2C_Handle      i2c0;
+I2C_Handle      i2c1;
+
 I2C_Params      i2cParams;
 I2C_Transaction i2cTransaction;
 
@@ -196,7 +197,7 @@ uint8_t readBuffer[10];
 bool retVal = false;
 
 // Writes an 8-bit register
-void writeReg(uint16_t reg, uint8_t value)
+void writeReg(uint16_t reg, uint8_t value,I2C_Handle i2c)
 {
     bool status;
 
@@ -218,7 +219,7 @@ void writeReg(uint16_t reg, uint8_t value)
 
 }
 // Writes an 16-bit register
-void  writeReg16Bit(uint16_t reg, uint16_t value)
+void  writeReg16Bit(uint16_t reg, uint16_t value,I2C_Handle i2c)
 {
     bool status;
 
@@ -242,7 +243,7 @@ void  writeReg16Bit(uint16_t reg, uint16_t value)
 }
 
 // Read an 8-bit register
-uint8_t readReg(uint16_t reg)
+uint8_t readReg(uint16_t reg,I2C_Handle i2c)
 {
 
     writeBuffer[0]=(reg >> 8) & 0xFF;
@@ -265,7 +266,7 @@ uint8_t readReg(uint16_t reg)
 }
 
 // Read an 16-bit register
-uint8_t readReg16Bit(uint16_t reg)
+uint8_t readReg16Bit(uint16_t reg,I2C_Handle i2c)
 {
 
     writeBuffer[0]=(reg >> 8) & 0xFF;
@@ -291,50 +292,50 @@ uint8_t readReg16Bit(uint16_t reg)
 
 }
 
-void VL6180X_init()
+void VL6180X_init(I2C_Handle i2c)
 {
-    if (readReg(VL6180X_SYSTEM__FRESH_OUT_OF_RESET) == 1)
+    if (readReg(VL6180X_SYSTEM__FRESH_OUT_OF_RESET,i2c) == 1)
      {
 
-       writeReg(0x207, 0x01);
-       writeReg(0x208, 0x01);
-       writeReg(0x096, 0x00);
-       writeReg(0x097, 0xFD); // RANGE_SCALER = 253
-       writeReg(0x0E3, 0x00);
-       writeReg(0x0E4, 0x04);
-       writeReg(0x0E5, 0x02);
-       writeReg(0x0E6, 0x01);
-       writeReg(0x0E7, 0x03);
-       writeReg(0x0F5, 0x02);
-       writeReg(0x0D9, 0x05);
-       writeReg(0x0DB, 0xCE);
-       writeReg(0x0DC, 0x03);
-       writeReg(0x0DD, 0xF8);
-       writeReg(0x09F, 0x00);
-       writeReg(0x0A3, 0x3C);
-       writeReg(0x0B7, 0x00);
-       writeReg(0x0BB, 0x3C);
-       writeReg(0x0B2, 0x09);
-       writeReg(0x0CA, 0x09);
-       writeReg(0x198, 0x01);
-       writeReg(0x1B0, 0x17);
-       writeReg(0x1AD, 0x00);
-       writeReg(0x0FF, 0x05);
-       writeReg(0x100, 0x05);
-       writeReg(0x199, 0x05);
-       writeReg(0x1A6, 0x1B);
-       writeReg(0x1AC, 0x3E);
-       writeReg(0x1A7, 0x1F);
-       writeReg(0x030, 0x00);
+       writeReg(0x207, 0x01,i2c);
+       writeReg(0x208, 0x01,i2c);
+       writeReg(0x096, 0x00,i2c);
+       writeReg(0x097, 0xFD,i2c); // RANGE_SCALER = 253
+       writeReg(0x0E3, 0x00,i2c);
+       writeReg(0x0E4, 0x04,i2c);
+       writeReg(0x0E5, 0x02,i2c);
+       writeReg(0x0E6, 0x01,i2c);
+       writeReg(0x0E7, 0x03,i2c);
+       writeReg(0x0F5, 0x02,i2c);
+       writeReg(0x0D9, 0x05,i2c);
+       writeReg(0x0DB, 0xCE,i2c);
+       writeReg(0x0DC, 0x03,i2c);
+       writeReg(0x0DD, 0xF8,i2c);
+       writeReg(0x09F, 0x00,i2c);
+       writeReg(0x0A3, 0x3C,i2c);
+       writeReg(0x0B7, 0x00,i2c);
+       writeReg(0x0BB, 0x3C,i2c);
+       writeReg(0x0B2, 0x09,i2c);
+       writeReg(0x0CA, 0x09,i2c);
+       writeReg(0x198, 0x01,i2c);
+       writeReg(0x1B0, 0x17,i2c);
+       writeReg(0x1AD, 0x00,i2c);
+       writeReg(0x0FF, 0x05,i2c);
+       writeReg(0x100, 0x05,i2c);
+       writeReg(0x199, 0x05,i2c);
+       writeReg(0x1A6, 0x1B,i2c);
+       writeReg(0x1AC, 0x3E,i2c);
+       writeReg(0x1A7, 0x1F,i2c);
+       writeReg(0x030, 0x00,i2c);
 
-       writeReg(VL6180X_SYSTEM__FRESH_OUT_OF_RESET, 0);
+       writeReg(VL6180X_SYSTEM__FRESH_OUT_OF_RESET, 0,i2c);
      }
     else
      {
        // Sensor has already been initialized, so try to get scaling settings by
        // reading registers.
 
-       uint16_t s = readReg16Bit(RANGE_SCALER);
+       uint16_t s = readReg16Bit(RANGE_SCALER,i2c);
 
      }
 
@@ -343,46 +344,46 @@ void VL6180X_init()
 // Note that this function does not set up GPIO1 as an interrupt output as
 // suggested, though you can do so by calling:
 // writeReg(SYSTEM__MODE_GPIO1, 0x10);
-void VL6180X_configureDefault(void)
+void VL6180X_configureDefault(I2C_Handle i2c)
 {
   // "Recommended : Public registers"
 
   // readout__averaging_sample_period =
-  writeReg(VL6180X_READOUT__AVERAGING_SAMPLE_PERIOD, 0x3C);
+  writeReg(VL6180X_READOUT__AVERAGING_SAMPLE_PERIOD, 0x3C,i2c);
 
   // sysals__analogue_gain_light = 6 (ALS gain = 1 nominal, actually 1.01 according to Table 14 in datasheet)
-  writeReg(VL6180X_SYSALS__ANALOGUE_GAIN, 0x46);
+  writeReg(VL6180X_SYSALS__ANALOGUE_GAIN, 0x46,i2c);
 
   // sysrange__vhv_repeat_rate = 255 (auto Very High Voltage temperature recalibration after every 255 range measurements)
-  writeReg(VL6180X_SYSRANGE__VHV_REPEAT_RATE, 0xFF);
+  writeReg(VL6180X_SYSRANGE__VHV_REPEAT_RATE, 0xFF,i2c);
 
   // sysals__integration_period = 99 (100 ms)
   // AN4545 incorrectly recommends writing to register 0x040; 0x63 should go in the lower byte, which is register 0x041.
-  writeReg16Bit(VL6180X_SYSALS__INTEGRATION_PERIOD, 0x0063);
+  writeReg16Bit(VL6180X_SYSALS__INTEGRATION_PERIOD, 0x0063,i2c);
 
   // sysrange__vhv_recalibrate = 1 (manually trigger a VHV recalibration)
-  writeReg(VL6180X_SYSRANGE__VHV_RECALIBRATE, 0x01);
+  writeReg(VL6180X_SYSRANGE__VHV_RECALIBRATE, 0x01,i2c);
 
 
   // "Optional: Public registers"
 
   // sysrange__intermeasurement_period = 9 (100 ms)
-  writeReg(VL6180X_SYSRANGE__INTERMEASUREMENT_PERIOD, 0x01);
+  writeReg(VL6180X_SYSRANGE__INTERMEASUREMENT_PERIOD, 0x01,i2c);
 
   // sysals__intermeasurement_period = 49 (500 ms)
-  writeReg(VL6180X_SYSALS__INTERMEASUREMENT_PERIOD, 0x31);
+  writeReg(VL6180X_SYSALS__INTERMEASUREMENT_PERIOD, 0x31,i2c);
 
   // als_int_mode = 4 (ALS new sample ready interrupt); range_int_mode = 4 (range new sample ready interrupt)
-  writeReg(VL6180X_SYSTEM__INTERRUPT_CONFIG_GPIO, 0x24);
+  writeReg(VL6180X_SYSTEM__INTERRUPT_CONFIG_GPIO, 0x24,i2c);
 
 
   // Reset other settings to power-on defaults
 
   // sysrange__max_convergence_time = 63 (63 ms)
-  writeReg(VL6180X_SYSRANGE__MAX_CONVERGENCE_TIME, 0x3F);
+  writeReg(VL6180X_SYSRANGE__MAX_CONVERGENCE_TIME, 0x3F,i2c);
 
   // disable interleaved mode
-  writeReg(VL6180X_INTERLEAVED_MODE__ENABLE, 0);
+  writeReg(VL6180X_INTERLEAVED_MODE__ENABLE, 0,i2c);
 
 }
 
@@ -394,23 +395,23 @@ void VL6180X_configureDefault(void)
 */
 /**************************************************************************/
 
-uint8_t VL6180X_readRange(void) {
+uint8_t VL6180X_readRange(I2C_Handle i2c) {
   // wait for device to be ready for range measurement
-  while (!(readReg(VL6180X_REG_RESULT_RANGE_STATUS) & 0x01))
+  while (!(readReg(VL6180X_REG_RESULT_RANGE_STATUS,i2c) & 0x01))
     ;
 
   // Start a range measurement
-  writeReg(VL6180X_REG_SYSRANGE_START, 0x01);
+  writeReg(VL6180X_REG_SYSRANGE_START, 0x01,i2c);
 
   // Poll until bit 2 is set
-  while (!(readReg(VL6180X_REG_RESULT_INTERRUPT_STATUS_GPIO) & 0x04))
+  while (!(readReg(VL6180X_REG_RESULT_INTERRUPT_STATUS_GPIO,i2c) & 0x04))
     ;
 
   // read range in mm
-  uint8_t range = readReg(VL6180X_REG_RESULT_RANGE_VAL);
+  uint8_t range = readReg(VL6180X_REG_RESULT_RANGE_VAL,i2c);
 
   // clear interrupt
-  writeReg(VL6180X_REG_SYSTEM_INTERRUPT_CLEAR, 0x07);
+  writeReg(VL6180X_REG_SYSTEM_INTERRUPT_CLEAR, 0x07,i2c);
 
   return range;
 }
@@ -426,16 +427,16 @@ uint8_t VL6180X_readRange(void) {
 */
 /**************************************************************************/
 
-bool VL6180X_startRange(void) {
+bool VL6180X_startRange(I2C_Handle i2c) {
   // wait for device to be ready for range measurement
 
-  while (!(readReg(VL6180X_REG_RESULT_RANGE_STATUS) & 0x01)){
+  while (!(readReg(VL6180X_REG_RESULT_RANGE_STATUS,i2c) & 0x01)){
 
   }
     ;
 
   // Start a range measurement
-  writeReg(VL6180X_REG_SYSRANGE_START, 0x01);
+  writeReg(VL6180X_REG_SYSRANGE_START, 0x01,i2c);
 
   return true;
 }
@@ -447,10 +448,10 @@ bool VL6180X_startRange(void) {
 */
 /**************************************************************************/
 
-bool VL6180X_isRangeComplete(void) {
+bool VL6180X_isRangeComplete(I2C_Handle i2c) {
 
   // Poll until bit 2 is set
-  if ((readReg(VL6180X_REG_RESULT_INTERRUPT_STATUS_GPIO) & 0x04))
+  if ((readReg(VL6180X_REG_RESULT_INTERRUPT_STATUS_GPIO,i2c) & 0x04))
     return true;
 
   return false;
@@ -463,10 +464,10 @@ bool VL6180X_isRangeComplete(void) {
 */
 /**************************************************************************/
 
-bool VL6180X_waitRangeComplete(void) {
+bool VL6180X_waitRangeComplete(I2C_Handle i2c) {
 
   // Poll until bit 2 is set
-  while (!(readReg(VL6180X_REG_RESULT_INTERRUPT_STATUS_GPIO) & 0x04))
+  while (!(readReg(VL6180X_REG_RESULT_INTERRUPT_STATUS_GPIO,i2c) & 0x04))
     ;
 
   return true;
@@ -481,13 +482,13 @@ bool VL6180X_waitRangeComplete(void) {
 */
 /**************************************************************************/
 
-uint8_t VL6180X_readRangeResult(void) {
+uint8_t VL6180X_readRangeResult(I2C_Handle i2c) {
 
   // read range in mm
-  uint8_t range = readReg(VL6180X_REG_RESULT_RANGE_VAL);
+  uint8_t range = readReg(VL6180X_REG_RESULT_RANGE_VAL,i2c);
 
   // clear interrupt
-  writeReg(VL6180X_REG_SYSTEM_INTERRUPT_CLEAR, 0x07);
+  writeReg(VL6180X_REG_SYSTEM_INTERRUPT_CLEAR, 0x07,i2c);
 
   return range;
 }
@@ -500,7 +501,7 @@ uint8_t VL6180X_readRangeResult(void) {
 */
 /**************************************************************************/
 
-void VL6180X_startRangeContinuous(uint16_t period_ms) {
+void VL6180X_startRangeContinuous(uint16_t period_ms,I2C_Handle i2c) {
   uint8_t period_reg = 0;
   if (period_ms > 10) {
     if (period_ms < 2550)
@@ -509,10 +510,10 @@ void VL6180X_startRangeContinuous(uint16_t period_ms) {
       period_reg = 254;
   }
   // Set  ranging inter-measurement
-  writeReg(VL6180X_SYSRANGE__INTERMEASUREMENT_PERIOD, period_reg);
+  writeReg(VL6180X_SYSRANGE__INTERMEASUREMENT_PERIOD, period_reg,i2c);
 
   // Start a continuous range measurement
-  writeReg(VL6180X_REG_SYSRANGE_START, 0x03);
+  writeReg(VL6180X_REG_SYSRANGE_START, 0x03,i2c);
 }
 
 /**************************************************************************/
@@ -521,10 +522,10 @@ void VL6180X_startRangeContinuous(uint16_t period_ms) {
 */
 /**************************************************************************/
 
-void VL6180X_stopRangeContinuous(void) {
+void VL6180X_stopRangeContinuous(I2C_Handle i2c) {
   // stop the continuous range operation, by setting the range register
   // back to 1, Page 7 of appication notes
-  writeReg(VL6180X_REG_SYSRANGE_START, 0x01);
+  writeReg(VL6180X_REG_SYSRANGE_START, 0x0,i2c);
 }
 
 /**************************************************************************/
@@ -534,8 +535,8 @@ void VL6180X_stopRangeContinuous(void) {
 */
 /**************************************************************************/
 
-uint8_t VL6180X_readRangeStatus(void) {
-  return (readReg(VL6180X_REG_RESULT_RANGE_STATUS) >> 4);
+uint8_t VL6180X_readRangeStatus(I2C_Handle i2c) {
+  return (readReg(VL6180X_REG_RESULT_RANGE_STATUS,i2c) >> 4);
 }
 
 
@@ -565,43 +566,79 @@ void *mainThread(void *arg0)
     I2C_Params_init(&i2cParams);
     i2cParams.bitRate = I2C_400kHz;
 
-    i2c = I2C_open(CONFIG_I2C_TMP, &i2cParams);
-    if (i2c == NULL) {
+    i2c1 = I2C_open(CONFIG_I2C_1, &i2cParams);
+    if (i2c1 == NULL) {
         Display_printf(display, 0, 0, "Error Initializing I2C\n");
         while (1);
     }
     else {
-        Display_printf(display, 0, 0, "I2C Initialized!\n");
+        Display_printf(display, 0, 0, "I2C Initialized Bus 1!\n");
     }
 
-    VL6180X_init();
-    Display_printf(display, 0, 0, "Init");
-    VL6180X_configureDefault();
+//    i2c0 = I2C_open(CONFIG_I2C_0, &i2cParams);
+//    if (i2c0 == NULL) {
+//            Display_printf(display, 0, 0, "Error Initializing I2C\n");
+//            while (1);
+//     }
+//     else {
+//            Display_printf(display, 0, 0, "I2C Initialized Bus 0!\n");
+//     }
 
-    uint8_t rangeOld = 0;
+
+
+//    VL6180X_init(i2c0);
+//    Display_printf(display, 0, 0, "Init");
+//    VL6180X_configureDefault(i2c0);
+
+
+    uint8_t rangeOld1 = 0;
+    uint8_t rangeOld0 = 0;
+
+    /* Configuring P1.0 as output */
+    //GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN6);
+    //GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
+
+    GPIO_setConfig(CONFIG_GPIO_0, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW );
+    GPIO_setConfig(CONFIG_GPIO_1, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW );
     while(1){
 
-        VL6180X_startRange();
-        uint8_t range = VL6180X_readRange();
-        uint8_t status = VL6180X_readRangeStatus();
+        GPIO_setConfig(CONFIG_GPIO_0, GPIO_CFG_INPUT | GPIO_CFG_IN_NOPULL );
+        VL6180X_init(i2c1);
+        VL6180X_configureDefault(i2c1);
 
-        if(status == 0 & rangeOld != range & range < 133){
-        //Display_printf(display, 0, 0, "Status is %d\n",status);
-        Display_printf(display, 0, 0, "Range is %d",range);
-        rangeOld = range;
-        }
+        VL6180X_startRange(i2c1);
+        uint8_t range1 = VL6180X_readRange(i2c1);
+        uint8_t status1 = VL6180X_readRangeStatus(i2c1);
+        GPIO_setConfig(CONFIG_GPIO_0, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW );
+
+        GPIO_setConfig(CONFIG_GPIO_1, GPIO_CFG_INPUT | GPIO_CFG_IN_NOPULL );
+        VL6180X_init(i2c1);
+        VL6180X_configureDefault(i2c1);
+
+        VL6180X_startRange(i2c1);
+        uint8_t range2 = VL6180X_readRange(i2c1);
+        uint8_t status2 = VL6180X_readRangeStatus(i2c1);
+
+        GPIO_setConfig(CONFIG_GPIO_1, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW );
+
+//        VL6180X_startRange(i2c0);
+
+//        uint8_t range0 = VL6180X_readRange(i2c0);
+//        uint8_t status0 = VL6180X_readRangeStatus(i2c0);
 
 
 
-        int i;
-        for(i = 0;i<100000;i++){
+//        if(status1 == 0 & status0 == 0 & rangeOld1 != range1 & range1 < 133){
+        Display_printf(display, 0, 0, "Status is %d\n",status1);
+        Display_printf(display, 0, 0,"a %d  b %d",range1,range2);
+//        rangeOld1 = range1;
 
-        }
+
 
     }
 
 
-    I2C_close(i2c);
+    I2C_close(i2c1);
     Display_printf(display, 0, 0, "I2C closed!");
 
     return (NULL);

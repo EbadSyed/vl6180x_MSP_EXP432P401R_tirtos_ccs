@@ -63,8 +63,10 @@ const uint_least8_t Display_count = 1;
 GPIO_PinConfig gpioPinConfigs[] = {
     /* CONFIG_GPIO_LED_0 : LaunchPad LED 1 Red */
     GPIOMSP432_P1_0 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_LOW,
-    /* CONFIG_GPIO_TMP116_EN : TMP116 Power */
-    GPIOMSP432_P4_7 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_HIGH,
+    /* CONFIG_GPIO_0 */
+    GPIOMSP432_P3_6 | GPIO_DO_NOT_CONFIG,
+    /* CONFIG_GPIO_1 */
+    GPIOMSP432_P3_7 | GPIO_DO_NOT_CONFIG,
 };
 
 /*
@@ -78,7 +80,9 @@ GPIO_PinConfig gpioPinConfigs[] = {
 GPIO_CallbackFxn gpioCallbackFunctions[] = {
     /* CONFIG_GPIO_LED_0 : LaunchPad LED 1 Red */
     NULL,
-    /* CONFIG_GPIO_TMP116_EN : TMP116 Power */
+    /* CONFIG_GPIO_0 */
+    NULL,
+    /* CONFIG_GPIO_1 */
     NULL,
 };
 
@@ -88,8 +92,8 @@ GPIO_CallbackFxn gpioCallbackFunctions[] = {
 const GPIOMSP432_Config GPIOMSP432_config = {
     .pinConfigs = (GPIO_PinConfig *)gpioPinConfigs,
     .callbacks = (GPIO_CallbackFxn *)gpioCallbackFunctions,
-    .numberOfPinConfigs = 2,
-    .numberOfCallbacks = 2,
+    .numberOfPinConfigs = 3,
+    .numberOfCallbacks = 3,
     .intPriority = (~0)
 };
 
@@ -105,7 +109,7 @@ const GPIOMSP432_Config GPIOMSP432_config = {
 #include <ti/devices/msp432p4xx/driverlib/interrupt.h>
 #include <ti/devices/msp432p4xx/driverlib/i2c.h>
 
-#define CONFIG_I2C_COUNT 1
+#define CONFIG_I2C_COUNT 2
 
 /*
  *  ======== i2cMSP432Objects ========
@@ -116,7 +120,7 @@ I2CMSP432_Object i2cMSP432Objects[CONFIG_I2C_COUNT];
  *  ======== i2cMSP432HWAttrs ========
  */
 const I2CMSP432_HWAttrsV1 i2cMSP432HWAttrs[CONFIG_I2C_COUNT] = {
-    /* CONFIG_I2C_TMP */
+    /* CONFIG_I2C_1 */
     {
         .baseAddr = EUSCI_B1_BASE,
         .intNum = INT_EUSCIB1,
@@ -125,17 +129,32 @@ const I2CMSP432_HWAttrsV1 i2cMSP432HWAttrs[CONFIG_I2C_COUNT] = {
         .dataPin = I2CMSP432_P6_4_UCB1SDA,
         .clkPin  = I2CMSP432_P6_5_UCB1SCL
     },
+    /* CONFIG_I2C_0 */
+    {
+        .baseAddr = EUSCI_B0_BASE,
+        .intNum = INT_EUSCIB0,
+        .intPriority = (~0),
+        .clockSource = EUSCI_B_I2C_CLOCKSOURCE_SMCLK,
+        .dataPin = I2CMSP432_P1_6_UCB0SDA,
+        .clkPin  = I2CMSP432_P1_7_UCB0SCL
+    },
 };
 
 /*
  *  ======== I2C_config ========
  */
 const I2C_Config I2C_config[CONFIG_I2C_COUNT] = {
-    /* CONFIG_I2C_TMP */
+    /* CONFIG_I2C_1 */
     {
         .fxnTablePtr = &I2CMSP432_fxnTable,
-        .object = &i2cMSP432Objects[CONFIG_I2C_TMP],
-        .hwAttrs = &i2cMSP432HWAttrs[CONFIG_I2C_TMP]
+        .object = &i2cMSP432Objects[CONFIG_I2C_1],
+        .hwAttrs = &i2cMSP432HWAttrs[CONFIG_I2C_1]
+    },
+    /* CONFIG_I2C_0 */
+    {
+        .fxnTablePtr = &I2CMSP432_fxnTable,
+        .object = &i2cMSP432Objects[CONFIG_I2C_0],
+        .hwAttrs = &i2cMSP432HWAttrs[CONFIG_I2C_0]
     },
 };
 

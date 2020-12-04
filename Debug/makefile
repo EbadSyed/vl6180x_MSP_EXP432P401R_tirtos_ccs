@@ -10,9 +10,9 @@ GEN_OPTS__FLAG := --cmd_file="C:/Users/SEbad/workspace_v10/tirtos_builds_MSP_EXP
 GEN_CMDS__FLAG := -l"C:/Users/SEbad/workspace_v10/tirtos_builds_MSP_EXP432P401R_release_ccs/Debug/configPkg/linker.cmd" 
 
 ORDERED_OBJS += \
-"./syscfg/ti_drivers_config.obj" \
 "./main_tirtos.obj" \
 "./vl6180x.obj" \
+"./syscfg/ti_drivers_config.obj" \
 "../MSP_EXP432P401R_TIRTOS.cmd" \
 -l"ti/display/lib/display.aem4f" \
 -l"ti/grlib/lib/ccs/m4f/grlib.a" \
@@ -166,8 +166,8 @@ vl6180x_MSP_EXP432P401R_tirtos_ccs.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(GEN_MISC_FILES__QUOTED)$(BIN_OUTPUTS__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "syscfg\ti_drivers_config.obj" "main_tirtos.obj" "vl6180x.obj" 
-	-$(RM) "syscfg\ti_drivers_config.d" "main_tirtos.d" "vl6180x.d" 
+	-$(RM) "main_tirtos.obj" "vl6180x.obj" "syscfg\ti_drivers_config.obj" 
+	-$(RM) "main_tirtos.d" "vl6180x.d" "syscfg\ti_drivers_config.d" 
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '

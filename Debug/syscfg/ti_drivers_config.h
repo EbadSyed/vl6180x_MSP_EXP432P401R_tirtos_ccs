@@ -32,8 +32,10 @@ extern "C" {
 
 /* P1.0, LaunchPad LED 1 Red */
 #define CONFIG_GPIO_LED_0           0
-/* P4.7, TMP116 Power */
-#define CONFIG_GPIO_TMP116_EN       1
+/* P3.6 */
+#define CONFIG_GPIO_0               1
+/* P3.7 */
+#define CONFIG_GPIO_1               2
 
 /* LEDs are active high */
 #define CONFIG_GPIO_LED_ON  (1)
@@ -52,28 +54,41 @@ extern "C" {
  *  SDA: P6.4
  *  BAS Sensors BoosterPack I2C
  */
-#define CONFIG_I2C_TMP              0
+#define CONFIG_I2C_1                0
+/*
+ *  SCL: P1.7
+ *  SDA: P1.6
+ */
+#define CONFIG_I2C_0                1
 
 /* ======== I2C Addresses and Speeds ======== */
 #include <ti/drivers/I2C.h>
 
-/* ---- CONFIG_I2C_TMP I2C bus components ---- */
+/* ---- CONFIG_I2C_1 I2C bus components ---- */
 
 /* BOOSTXL_BASSENSORS/TMP116 address and max speed */
-#define CONFIG_I2C_TMP_BOOSTXL_BASSENSORS_TMP116_ADDR     (0x48)
-#define CONFIG_I2C_TMP_BOOSTXL_BASSENSORS_TMP116_MAXSPEED (400U) /* Kbps */
+#define CONFIG_I2C_1_BOOSTXL_BASSENSORS_TMP116_ADDR     (0x48)
+#define CONFIG_I2C_1_BOOSTXL_BASSENSORS_TMP116_MAXSPEED (400U) /* Kbps */
 
 /* BOOSTXL_BASSENSORS/OPT3001 address and max speed */
-#define CONFIG_I2C_TMP_BOOSTXL_BASSENSORS_OPT3001_ADDR     (0x44)
-#define CONFIG_I2C_TMP_BOOSTXL_BASSENSORS_OPT3001_MAXSPEED (2600U) /* Kbps */
+#define CONFIG_I2C_1_BOOSTXL_BASSENSORS_OPT3001_ADDR     (0x44)
+#define CONFIG_I2C_1_BOOSTXL_BASSENSORS_OPT3001_MAXSPEED (2600U) /* Kbps */
 
 /* BOOSTXL_BASSENSORS/HDC2010 address and max speed */
-#define CONFIG_I2C_TMP_BOOSTXL_BASSENSORS_HDC2010_ADDR     (0x40)
-#define CONFIG_I2C_TMP_BOOSTXL_BASSENSORS_HDC2010_MAXSPEED (400U) /* Kbps */
+#define CONFIG_I2C_1_BOOSTXL_BASSENSORS_HDC2010_ADDR     (0x40)
+#define CONFIG_I2C_1_BOOSTXL_BASSENSORS_HDC2010_MAXSPEED (400U) /* Kbps */
 
-/* CONFIG_I2C_TMP max speed (supported by all components) */
-#define CONFIG_I2C_TMP_MAXSPEED   (400U) /* Kbps */
-#define CONFIG_I2C_TMP_MAXBITRATE ((I2C_BitRate)I2C_400kHz)
+/* CONFIG_I2C_1 max speed (supported by all components) */
+#define CONFIG_I2C_1_MAXSPEED   (400U) /* Kbps */
+#define CONFIG_I2C_1_MAXBITRATE ((I2C_BitRate)I2C_400kHz)
+
+/* ---- CONFIG_I2C_0 I2C bus components ---- */
+
+/* no components connected to CONFIG_I2C_0 */
+
+/* max speed unspecified, defaulting to 100 Kbps */
+#define CONFIG_I2C_0_MAXSPEED   (100U) /* Kbps */
+#define CONFIG_I2C_0_MAXBITRATE ((I2C_BitRate)I2C_100kHz)
 
 
 /*

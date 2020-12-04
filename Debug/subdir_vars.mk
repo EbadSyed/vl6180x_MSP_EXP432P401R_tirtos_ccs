@@ -9,12 +9,12 @@ CMD_SRCS += \
 ../MSP_EXP432P401R_TIRTOS.cmd 
 
 SYSCFG_SRCS += \
-../i2ctmp.syscfg 
+../vl6180x.syscfg 
 
 C_SRCS += \
-./syscfg/ti_drivers_config.c \
 ../main_tirtos.c \
-../vl6180x.c 
+../vl6180x.c \
+./syscfg/ti_drivers_config.c 
 
 GEN_FILES += \
 ./syscfg/ti_drivers_config.c 
@@ -23,14 +23,14 @@ GEN_MISC_DIRS += \
 ./syscfg/ 
 
 C_DEPS += \
-./syscfg/ti_drivers_config.d \
 ./main_tirtos.d \
-./vl6180x.d 
+./vl6180x.d \
+./syscfg/ti_drivers_config.d 
 
 OBJS += \
-./syscfg/ti_drivers_config.obj \
 ./main_tirtos.obj \
-./vl6180x.obj 
+./vl6180x.obj \
+./syscfg/ti_drivers_config.obj 
 
 GEN_MISC_FILES += \
 ./syscfg/ti_drivers_config.h \
@@ -40,28 +40,28 @@ GEN_MISC_DIRS__QUOTED += \
 "syscfg\" 
 
 OBJS__QUOTED += \
-"syscfg\ti_drivers_config.obj" \
 "main_tirtos.obj" \
-"vl6180x.obj" 
+"vl6180x.obj" \
+"syscfg\ti_drivers_config.obj" 
 
 GEN_MISC_FILES__QUOTED += \
 "syscfg\ti_drivers_config.h" \
 "syscfg\syscfg_c.rov.xs" 
 
 C_DEPS__QUOTED += \
-"syscfg\ti_drivers_config.d" \
 "main_tirtos.d" \
-"vl6180x.d" 
+"vl6180x.d" \
+"syscfg\ti_drivers_config.d" 
 
 GEN_FILES__QUOTED += \
 "syscfg\ti_drivers_config.c" 
 
-SYSCFG_SRCS__QUOTED += \
-"../i2ctmp.syscfg" 
-
 C_SRCS__QUOTED += \
-"./syscfg/ti_drivers_config.c" \
 "../main_tirtos.c" \
-"../vl6180x.c" 
+"../vl6180x.c" \
+"./syscfg/ti_drivers_config.c" 
+
+SYSCFG_SRCS__QUOTED += \
+"../vl6180x.syscfg" 
 
 
