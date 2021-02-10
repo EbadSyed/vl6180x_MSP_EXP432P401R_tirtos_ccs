@@ -30,12 +30,14 @@ extern "C" {
  *  ======== GPIO ========
  */
 
-/* P1.0, LaunchPad LED 1 Red */
-#define CONFIG_GPIO_LED_0           0
 /* P3.6 */
-#define CONFIG_GPIO_0               1
+#define CONFIG_GPIO_0               0
 /* P3.7 */
-#define CONFIG_GPIO_1               2
+#define CONFIG_GPIO_1               1
+/* P3.2 */
+#define CONFIG_GPIO_2               2
+/* P5.2 */
+#define CONFIG_GPIO_3               3
 
 /* LEDs are active high */
 #define CONFIG_GPIO_LED_ON  (1)
@@ -56,8 +58,8 @@ extern "C" {
  */
 #define CONFIG_I2C_1                0
 /*
- *  SCL: P1.7
- *  SDA: P1.6
+ *  SCL: P2.3
+ *  SDA: P2.4
  */
 #define CONFIG_I2C_0                1
 

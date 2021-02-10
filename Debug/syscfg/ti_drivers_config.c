@@ -61,12 +61,14 @@ const uint_least8_t Display_count = 1;
  *  Array of Pin configurations
  */
 GPIO_PinConfig gpioPinConfigs[] = {
-    /* CONFIG_GPIO_LED_0 : LaunchPad LED 1 Red */
-    GPIOMSP432_P1_0 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_LOW,
     /* CONFIG_GPIO_0 */
     GPIOMSP432_P3_6 | GPIO_DO_NOT_CONFIG,
     /* CONFIG_GPIO_1 */
     GPIOMSP432_P3_7 | GPIO_DO_NOT_CONFIG,
+    /* CONFIG_GPIO_2 */
+    GPIOMSP432_P3_2 | GPIO_DO_NOT_CONFIG,
+    /* CONFIG_GPIO_3 */
+    GPIOMSP432_P5_2 | GPIO_DO_NOT_CONFIG,
 };
 
 /*
@@ -78,11 +80,13 @@ GPIO_PinConfig gpioPinConfigs[] = {
  *  (GPIO.optimizeCallbackTableSize = true)
  */
 GPIO_CallbackFxn gpioCallbackFunctions[] = {
-    /* CONFIG_GPIO_LED_0 : LaunchPad LED 1 Red */
-    NULL,
     /* CONFIG_GPIO_0 */
     NULL,
     /* CONFIG_GPIO_1 */
+    NULL,
+    /* CONFIG_GPIO_2 */
+    NULL,
+    /* CONFIG_GPIO_3 */
     NULL,
 };
 
@@ -92,8 +96,8 @@ GPIO_CallbackFxn gpioCallbackFunctions[] = {
 const GPIOMSP432_Config GPIOMSP432_config = {
     .pinConfigs = (GPIO_PinConfig *)gpioPinConfigs,
     .callbacks = (GPIO_CallbackFxn *)gpioCallbackFunctions,
-    .numberOfPinConfigs = 3,
-    .numberOfCallbacks = 3,
+    .numberOfPinConfigs = 4,
+    .numberOfCallbacks = 4,
     .intPriority = (~0)
 };
 
@@ -131,12 +135,12 @@ const I2CMSP432_HWAttrsV1 i2cMSP432HWAttrs[CONFIG_I2C_COUNT] = {
     },
     /* CONFIG_I2C_0 */
     {
-        .baseAddr = EUSCI_B0_BASE,
-        .intNum = INT_EUSCIB0,
+        .baseAddr = EUSCI_B2_BASE,
+        .intNum = INT_EUSCIB2,
         .intPriority = (~0),
         .clockSource = EUSCI_B_I2C_CLOCKSOURCE_SMCLK,
-        .dataPin = I2CMSP432_P1_6_UCB0SDA,
-        .clkPin  = I2CMSP432_P1_7_UCB0SCL
+        .dataPin = I2CMSP432_P2_4_UCB2SDA,
+        .clkPin  = I2CMSP432_P2_3_UCB2SCL
     },
 };
 
